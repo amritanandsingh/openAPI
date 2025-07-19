@@ -21,18 +21,18 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Zip files
+      - name: Zip Lambda code
         run: zip -r function.zip .
 
-      - name: Deploy to AWS Lambda
-        uses: aws-actions/aws-cli-action@v1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-          # Update function code
-          inline-script: |
-            aws lambda update-function-code \
-              --function-name openApi \
-              --zip-file fileb://function.zip
+      - name: Deploy to AWS Lambda
+        run: |
+          aws lambda update-function-code \
+            --function-name openApi \
+            --zip-file fileb://function.zip
